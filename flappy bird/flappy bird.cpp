@@ -139,7 +139,12 @@ int main()
     std::thread t(check_key, &key, &bird);
     for (int i = 0, mj = 0;; mj--)
     {
-        if (mj % 2)i--; // i is speed of barriers
+        if(score <= 20)
+            if (mj % 3)i--; // i is speed of barriers
+        if (score > 20 && score <= 120)
+            if (mj % 3)i--; 
+        if (score > 120)
+            i--;
         short frame = 1000 / (clock() - time + 1);
         time = clock();
         display.cleardisplay();
@@ -169,15 +174,30 @@ int main()
 
         if (i == 0) i = display.resx;
         if (key == 'q') {
+            bird.alive = false;
             t.detach();
             break;
         }
         int point_on_display = (int)bird.o.get_x() + (int)bird.o.get_y() * display.resx;
         if (bird.o.get_y() > display.resy || bird.o.get_y() < 0 || display.display[point_on_display] == '$')
         {
-            bird.alive = false;
-            t.detach();
             std::cout << "You die" << '\n';
+            std::cout << "Play again? Y/N  (double tap) or P to pay 10492348237409$ to continue" << '\n';
+
+            char c = getchar();
+            fflush(stdin);
+            if (c == 'p') {
+                bird.o.set_y(10);
+                bird.speedY = 0;
+                i--;
+                continue;
+            }
+            if (c == 'y')
+            {
+                bird.alive = false;
+                main();
+            }
+            bird.alive = false;
             break;
         }
         display.setdisplay();
@@ -185,14 +205,7 @@ int main()
         puts(display.display);
         Sleep(1);// 60 frames per sec
     }
-    std::cout << "Play again? Y/N  (double tap)" << '\n';
-
-    char c = getchar();
-    fflush(stdin);
-    if (c == 'y')
-    {
-        main();
-    }
+    t.detach();
     return 0;
 } 
 template<typename T>

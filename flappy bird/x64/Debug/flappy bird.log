@@ -1,0 +1,19 @@
+﻿  flappy bird.cpp
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(13,26): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(14,26): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(88,1): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(110,32): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(123,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(130,43): warning C4309: '=': truncation of constant value
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(148,21): warning C4244: 'initializing': conversion from 'clock_t' to 'short', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(153,13): warning C4804: '%': unsafe use of type 'bool' in operation
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(165,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(166,31): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(167,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(168,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(169,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(170,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(283,14): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(285,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\admin\Documents\cpp\highter\flappy bird\flappy bird\flappy bird.cpp(286,27): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  flappy bird.vcxproj -> C:\Users\admin\Documents\cpp\highter\flappy bird\x64\Debug\flappy bird.exe
