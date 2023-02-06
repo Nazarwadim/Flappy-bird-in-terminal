@@ -36,7 +36,7 @@ public:
     void set_Phisics()
     {
         float g = 9.8;
-        speedY += g /320;
+        speedY += g /220;
         float temp_y = o.get_y();
         temp_y += speedY;
         o.set_y(temp_y);
@@ -59,7 +59,7 @@ void check_key(char* key, Bird* bird)
             //move up
             bird->time = 0;
             bird->set_anim_time(3);
-            bird->speedY = -0.6;
+            bird->speedY = -0.8;
             break;
         }
     }
@@ -112,8 +112,8 @@ int main()
             l = display.resx;
             generate_sth(&display, peregoroda, 2);
         }
-        if (score < 20) { i -= 0.2; m -= 0.2; l -= 0.2; }
-        else { i -= 0.5; m -= 0.5; l -= 0.5;}         //speed of blocks
+        if (score < 20) { i -= 0.5; m -= 0.5; l -= 0.5; }
+        else { i -= 1; m -= 1; l -= 1;}         //speed of blocks
  
         short frame = 1000 / (clock() - time + 1);
         time = clock();
@@ -166,18 +166,17 @@ int main()
                 score++;
             }     
         }
-        printf("\n");
         display.setdisplay();
-        std::cout <<'\n' << "FPS: " << frame << '\n' << "Score: " << score << '\n';
+        //std::cout <<'\n' << "FPS: " << frame << '\n' << "Score: " << score<<"\n";
         puts(display.display);
-        Sleep(1);  // 60 frames per sec // 30 for 30 fps     50 for 20
+        Sleep(20);  // 60 frames per sec // 20 for 30 fps     50 for 20
     }
     t.detach();
     return 0;
 } 
 void generate_sth(Resl* display, Point peregoroda[], int n)
 {
-    float y2[] = { 0,33 };
+    float y2[] = { 0,display->resy };
     bool up = rand() % 2;
     float y1 = rand() % (display->resy - 10);
     float ytd = y1 > 10 ? y1 : y1 + 10;
@@ -205,7 +204,6 @@ void set_peregoroga_x(Point peregoroda[],float value, int number_of_element)
 void draw_peregoroda(Point peregoroda[],int number_of_element, Resl &display)
 {
     drawline(peregoroda[4*number_of_element+0], peregoroda[4 * number_of_element + 1], display);
-    drawline(peregoroda[4 * number_of_element + 1], peregoroda[4 * number_of_element + 2], display);
     drawline(peregoroda[4 * number_of_element + 2], peregoroda[4 * number_of_element + 3], display);
     drawline(peregoroda[4 * number_of_element + 3], peregoroda[4 * number_of_element + 0], display);
 }
