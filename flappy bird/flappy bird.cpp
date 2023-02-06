@@ -1,58 +1,8 @@
-#include <cmath>
-#include <windows.h>
 #include <iostream>
 #include <thread>
 #include <conio.h>
 #include <time.h>
-const int R = 120 * 33;
-const char chars[13] = ".,-~:;=!*#$@";
-template<typename T>
-int sign(T a);
-class Resl {
-public:
-    const int resx = sqrt(R * 3.64);
-    const int resy = sqrt(R / 3.63);
-    char display[R];
-    void setdisplay() {
-        for (int i = resx; i < R; i += resx)display[i] = '\n';
-        display[R - 1] = '\0';
-    }
-    void cleardisplay()
-    {
-        memset(display, ' ', R);
-        setdisplay();
-    }
-};
-class Point {
-private:
-    float x;
-    float y;
-public:
-    inline float get_x()
-    {
-        return this->x;
-    }
-    inline float get_y()
-    {
-        return this->y;
-    }
-    void set_x(float x)
-    {
-        this->x = x;
-    }
-    void set_y(float y)
-    {
-        this->y = y;
-    }
-    Point(float x, float y)
-    {
-        set_x(x);
-        set_y(y);
-    }
-    Point() {};
-};
-void draw_pixel(Resl& display, Point P, int N);
-void draw_pixel(Resl& display, float x, float y, int N);
+#include "../Header1.h"
 class Bird {
 private:
     float anim_time = 0;
@@ -86,14 +36,16 @@ public:
     void set_Phisics()
     {
         float g = 9.8;
-        speedY += g /320;
+        speedY += g /220;
         float temp_y = o.get_y();
         temp_y += speedY;
         o.set_y(temp_y);
     }
 };
-void drawline(Point A, Point B, Resl& display);
 void generate_sth(Resl* display, Point peregoroda[], int n);
+void set_peregoroga_x(Point peregoroda[], float value, int number_of_element);
+void draw_peregoroda(Point peregoroda[], int number_of_element, Resl* display);
+void draw_peregoroda(Point peregoroda[], int number_of_element, Resl &display);
 void check_key(char* key, Bird* bird)
 {
     int point_on_display = 0;
@@ -107,7 +59,7 @@ void check_key(char* key, Bird* bird)
             //move up
             bird->time = 0;
             bird->set_anim_time(3);
-            bird->speedY = -0.6;
+            bird->speedY = -0.8;
             break;
         }
     }
@@ -126,151 +78,132 @@ int main()
     Bird bird(15, 10);    
     int time = -1000;
     display.cleardisplay();
-    for (int i = 0; i < 33 * 120 - 1; i++) {
-        if (i % 120) display.display[i] = 177;
-        if(i % 2)puts(display.display);
+
+    bool light = true;
+    for (int i = 0; i < 1000; i++) {
+        display.cleardisplay();
+        char c = light == true ? 177 : ' ';
+        if(!(i % 50))light = !light;
+        
+        memset(display.display, c, R - 1);
+        display.setdisplay();
+        puts(display.display);
+       
     }
 
     //update
 
     Point peregoroda[12];
+    generate_sth(&display, peregoroda, 0);
     generate_sth(&display, peregoroda, 1);
     generate_sth(&display, peregoroda, 2);
     std::thread t(check_key, &key, &bird);
-    for (int i = 0, mj = 0;; mj--)
+    for (float i = display.resx, m = display.resx + 40, l = display.resx + 80;; )
     {
-        if (mj % 2)i--; // i is speed of barriers
+        if (i < 0 ) {
+            i = display.resx;
+            generate_sth(&display, peregoroda, 0);
+        }
+        if (m < 0) {
+            m = display.resx;
+            generate_sth(&display, peregoroda, 1);
+        }
+        if (l < 0) {
+            l = display.resx;
+            generate_sth(&display, peregoroda, 2);
+        }
+        if (score < 20) { i -= 0.5; m -= 0.5; l -= 0.5; }
+        else { i -= 1; m -= 1; l -= 1;}         //speed of blocks
+ 
         short frame = 1000 / (clock() - time + 1);
         time = clock();
         display.cleardisplay();
         bird.render_bird(display);
         bird.set_Phisics();
-        if (!i % display.resx) {
-            generate_sth(&display, peregoroda,0);
-            score++;
-        }
-        if (i % display.resx == (2*display.resx)/3) {
-            generate_sth(&display, peregoroda, 1);
-            score++;
-        }
-        if (i % display.resy == display.resx/3) {
-            generate_sth(&display, peregoroda, 2);
-            score++;
-        }
-        peregoroda[0].set_x(i % 120 );
-        peregoroda[1].set_x(i % 120 );
-        peregoroda[2].set_x(i % 120 + 40);
-        peregoroda[3].set_x(i % 120 + 40);
-        peregoroda[4].set_x(i % 120 + 80);
-        peregoroda[5].set_x(i % 120 + 80);
-        drawline(peregoroda[0], peregoroda[1], display);
-        drawline(peregoroda[2], peregoroda[3], display);
-        drawline(peregoroda[4], peregoroda[5], display);
-
-        if (i == 0) i = display.resx;
+        
+        set_peregoroga_x(peregoroda, i, 0);
+        set_peregoroga_x(peregoroda, m, 1);
+        set_peregoroga_x(peregoroda, l, 2);
+        draw_peregoroda(peregoroda, 0, display);
+        draw_peregoroda(peregoroda, 1, display);
+        draw_peregoroda(peregoroda, 2, display);
         if (key == 'q') {
+            bird.alive = false;
             t.detach();
             break;
         }
         int point_on_display = (int)bird.o.get_x() + (int)bird.o.get_y() * display.resx;
         if (bird.o.get_y() > display.resy || bird.o.get_y() < 0 || display.display[point_on_display] == '$')
         {
-            bird.alive = false;
-            t.detach();
             std::cout << "You die" << '\n';
+            std::cout << "Play again? Y/N  (double tap) or P to pay 10492348237409$ to continue" << '\n';
+
+            char c = getchar();
+            fflush(stdin);
+            if (c == 'p') {
+                bird.o.set_y(10);
+                bird.speedY = 0;
+                i--;
+                m--;
+                l--;
+                continue;
+            }
+            if (c == 'y')
+            {
+                bird.alive = false;
+                main();
+            }
+            bird.alive = false;
             break;
         }
-        display.setdisplay();
-        std::cout <<"FPS: "<< frame << '\n' <<"Score: " << score << '\n';
-        puts(display.display);
-        Sleep(1);// 60 frames per sec
-    }
-    std::cout << "Play again? Y/N  (double tap)" << '\n';
+        //score
 
-    char c = getchar();
-    fflush(stdin);
-    if (c == 'y')
-    {
-        main();
+        for (int j = 0; j < 12; j += 4)
+        {
+           // std::cout << (int)peregoroda[j].get_x() << ' ';
+            if ((int)peregoroda[j].get_x()  == 14)
+            {
+                score++;
+            }     
+        }
+        display.setdisplay();
+        //std::cout <<'\n' << "FPS: " << frame << '\n' << "Score: " << score<<"\n";
+        puts(display.display);
+        Sleep(20);  // 60 frames per sec // 20 for 30 fps     50 for 20
     }
+    t.detach();
     return 0;
 } 
-template<typename T>
-int sign(T a)
-{
-    if (a > 0) return 1;
-    if (a == 0) return 0;
-    if (a < 0) return -1;
-    return 1230043013;
-}
-void draw_pixel(Resl& display, float x, float y, int N)
-{
-    int pointTodraw = (int)x + (int)y * display.resx;
-    if (pointTodraw > 0 && pointTodraw < R && pointTodraw % display.resx != 0) {
-        display.display[pointTodraw] = chars[N];
-    }
-}
-void draw_pixel(Resl& display, Point P, int N)
-{
-    int pointTodraw = (int)P.get_x() + (int)P.get_y() * display.resx;
-    if (pointTodraw > 0 && pointTodraw < R && pointTodraw % display.resx != 0) {
-        display.display[pointTodraw] = chars[N];
-    }
-}
-void drawline(Point A, Point B, Resl& display)
-{
-    // using Bresenham's line algorithm
-    float x1 = A.get_x();
-    float y1 = A.get_y();
-    float x2 = B.get_x();
-    float y2 = B.get_y();
-    float y = y1;
-    float x = x1;
-    float dx = fabs(x2 - x1);
-    float dy = fabs(y2 - y1);
-    int s1 = sign(x2 - x1);
-    int s2 = sign(y2 - y1);
-    bool interchange;
-    if (dy > dx)
-    {
-        float T = dx;
-        dx = dy;
-        dy = T;
-        interchange = true;
-    }
-    else {
-        interchange = false;
-    }
-    float e = 2 * dy - dx,
-        a = 2 * dy,
-        b = 2 * dy - 2 * dx;
-    draw_pixel(display, x1, y, 10);
-
-    for (float i = 1; i < dx; i++)
-    {
-        if (e < 0)
-        {
-            if (interchange == 1)y = y + s2;
-            else x = x + s1;
-            e = e + a;
-        }
-        else {
-            y = y + s2;
-            x = x + s1;
-            e = e + b;
-        }
-        draw_pixel(display, x, y, 10);
-    }
-
-}
 void generate_sth(Resl* display, Point peregoroda[], int n)
 {
-    float y2[] = { 0,33 };
+    float y2[] = { 0,display->resy };
     bool up = rand() % 2;
     float y1 = rand() % (display->resy - 10);
     float ytd = y1 > 10 ? y1 : y1 + 10;
-    Point A(display->resx - 10, ytd);
-    Point B(display->resx - 10, y2[up]);
-    peregoroda[2 * n] = A;
-    peregoroda[2 * n + 1] = B;
+    Point A(display->resx - 11, ytd);
+    Point B(display->resx - 11, y2[up]);
+    Point C(display->resx - 1, y2[up]);
+    Point D(display->resx - 1, ytd);
+    peregoroda[4 * n] = A;
+    peregoroda[4 * n + 1] = B;
+    peregoroda[4 * n + 2] = C;
+    peregoroda[4 * n + 3] = D;
+}
+void set_peregoroga_x(Point peregoroda[],float value, int number_of_element)
+{
+    float dx = peregoroda[4 * number_of_element + 2].get_x() - peregoroda[4 * number_of_element].get_x();
+    for (int i = number_of_element * 4; i < number_of_element * 4 + 2; i++)
+    {
+        peregoroda[i].set_x(value - dx/2);
+    }
+    for (int i = number_of_element * 4 + 2; i < number_of_element * 4 + 4; i++)
+    {
+        peregoroda[i].set_x(value + dx / 2);
+    }
+}
+void draw_peregoroda(Point peregoroda[],int number_of_element, Resl &display)
+{
+    drawline(peregoroda[4*number_of_element+0], peregoroda[4 * number_of_element + 1], display);
+    drawline(peregoroda[4 * number_of_element + 2], peregoroda[4 * number_of_element + 3], display);
+    drawline(peregoroda[4 * number_of_element + 3], peregoroda[4 * number_of_element + 0], display);
 }
