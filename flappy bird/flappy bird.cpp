@@ -4,7 +4,6 @@
 #include <time.h>
 #include "../Header1.h"
 #pragma comment(lib, "winmm.lib")
-
 class Bird {
 private:
     float anim_time = 0;
@@ -48,6 +47,7 @@ void generate_sth(Resl* display, Point peregoroda[], int n);
 void set_peregoroga_x(Point peregoroda[], float value, int number_of_element);
 void draw_peregoroda(Point peregoroda[], int number_of_element, Resl* display);
 void draw_peregoroda(Point peregoroda[], int number_of_element, Resl& display);
+void show_frame(int frame, Resl &display);
 void check_key(char* key, Bird* bird)
 {
     int point_on_display = 0;
@@ -83,6 +83,7 @@ int main()
     display.cleardisplay();
 
     bool light = true;
+    //zastavka
     for (int i = 0; i < 1000; i++) {
         display.cleardisplay();
         char c = light == true ? 177 : ' ';
@@ -121,6 +122,7 @@ int main()
         short frame = 1000 / (clock() - time + 1);
         time = clock();
         display.cleardisplay();
+        show_frame(frame, display);
         bird.render_bird(display);
         bird.set_Phisics();
 
@@ -139,14 +141,14 @@ int main()
         if (bird.o.get_y() > display.resy || bird.o.get_y() < 0 || display.display[point_on_display] == '$')
         {
             std::cout << "You die" << '\n';
-            PlaySound(TEXT("pzdyi-dal.wav"), NULL, SND_FILENAME | SND_ASYNC);
-            
+            PlaySound(TEXT("lkpkpgougp.wav"), NULL, SND_FILENAME | SND_ASYNC);
+
             std::cout << "Play again? Y/N  (double tap) or P to pay 10492348237409$ to continue" << '\n';
 
             char c = getchar();
             fflush(stdin);
             if (c == 'p') {
-                PlaySound(TEXT("povezlo-povezlo.wav"), NULL, SND_ASYNC);
+                PlaySound(TEXT("povezlo-povezlo.wav"), NULL, SND_SYNC);
                 bird.o.set_y(3);
                 bird.speedY = 0;
                 i--;
@@ -166,16 +168,15 @@ int main()
 
         for (int j = 0; j < 12; j += 4)
         {
-            // std::cout << (int)peregoroda[j].get_x() << ' ';
             if ((int)peregoroda[j].get_x() == 14)
             {
                 score++;
             }
         }
+        
         display.setdisplay();
-        //std::cout <<'\n' << "FPS: " << frame << '\n' << "Score: " << score<<"\n";
         puts(display.display);
-        Sleep(20);  // 60 frames per sec // 20 for 30 fps     50 for 20
+        Sleep(20);  // 60 frames per sec // 20 for 30 fps     50 for 20  Warming !!! fps break`s phisics
     }
     t.detach();
     return 0;
@@ -184,7 +185,7 @@ void generate_sth(Resl* display, Point peregoroda[], int n)
 {
     float y2[] = { 0,(float)display->resy };
     bool up = rand() % 2;
-    float y1 = rand() % (display->resy -8);
+    float y1 = rand() % (display->resy - 8);
     float ytd = y1 > 10 ? y1 : y1 + 8;
     Point A(display->resx - 11, ytd);
     Point B(display->resx - 11, y2[up]);
@@ -212,4 +213,12 @@ void draw_peregoroda(Point peregoroda[], int number_of_element, Resl& display)
     drawline(peregoroda[4 * number_of_element + 0], peregoroda[4 * number_of_element + 1], display);
     drawline(peregoroda[4 * number_of_element + 2], peregoroda[4 * number_of_element + 3], display);
     drawline(peregoroda[4 * number_of_element + 3], peregoroda[4 * number_of_element + 0], display);
+}
+void show_frame(int frame, Resl &display) {
+    if (frame < 10) display.display[10 + display.resx] = frame + '0';
+    if (frame > 10 && frame < 100)
+    {
+        display.display[10 + display.resx] = frame / 10 + '0';
+        display.display[11 + display.resx] = frame - (frame / 10) * 10 + '0';
+    }
 }
